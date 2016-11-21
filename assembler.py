@@ -34,6 +34,8 @@ for command in asm_file:
 command_list = []
 #first address for symbol memory
 address = 16
+#reset asm_file to beginning
+asm_file.seek(0)
 for command in asm_file:
 	current_command = parser.clean(command)
 	#skip further processing if line made up of only spaces and/or comments
@@ -46,7 +48,7 @@ for command in asm_file:
 			binary_repr = coder.binary_repr_of_command()
 			command_list.append(binary_repr)
 		elif parser.command_type(current_command) == 'A_Command':
-			symbol = parser.symbol()
+			symbol = parser.symbol(current_command)
 			#if symbol doesn't begin with a numeric value, check symbol table for
 			#correct value. Add new symbol if necessary
 			try:
