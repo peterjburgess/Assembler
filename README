@@ -1,0 +1,15 @@
+							Hack Assembler
+
+Introduction
+------------
+assembler.py converts a .asm file written in the Hack Machine language into a
+.hack file that can be read by the Hack CPU emulator. It has been created as 
+part of the Nand2Tetris online course, found at www.nand2tetris.org
+
+Usage
+-----
+On the command line:- python3 assembler.py file.asm
+Currently only one file can be converted at a time
+There is only support for python3
+A .hack file will be produced in the same directory as the .asm file
+
