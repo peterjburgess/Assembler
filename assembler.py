@@ -15,41 +15,38 @@ if extension != 'asm':
 	raise ValueError("Wrong filetype. Supply a .asm file")
 
 asm_file = open(file_name, 'r')
-parse = parser.Parser(asm_file)
 symbol_table = symbol_table.SymbolTable()
 program_counter = 0
 
 #Go through file once, find the loops and store them in the symbol table
-while parse.has_more_commands():
-	parse.advance()
-	if parse.current_command:
-		if parse.command_type() == 'L_Command':
-			loop_symbol = parse.symbol()
+for command in asm_file:
+	current_command = parser.clean(command)
+	#skip further processing if line made up of only spaces and/or comments
+	if current_command:
+		if parser.command_type(current_command) == 'L_Command':
+			loop_symbol = parser.symbol(current_command)
 			symbol_table.add_entry(loop_symbol, program_counter)
 
 		else:
 			program_counter += 1
 
-asm_file.close()
-asm_file = open(file_name, 'r')
-parse = parser.Parser(asm_file)
-
 #Create a list of commands to be later exported to a .hack file
 command_list = []
 #first address for symbol memory
 address = 16
-while parse.has_more_commands():
-	parse.advance()
-	if parse.current_command:
-		if parse.command_type() == 'C_Command':
-			dest = parse.dest()
-			comp = parse.comp()
-			jump = parse.jump()
+for command in asm_file:
+	current_command = parser.clean(command)
+	#skip further processing if line made up of only spaces and/or comments
+	if current_command:
+		if parser.command_type(current_command) == 'C_Command':
+			dest = parser.dest(current_command)
+			comp = parser.comp(current_command)
+			jump = parser.jump(current_command)
 			coder = code.Code(dest, comp, jump)
 			binary_repr = coder.binary_repr_of_command()
 			command_list.append(binary_repr)
-		elif parse.command_type() == 'A_Command':
-			symbol = parse.symbol()
+		elif parser.command_type(current_command) == 'A_Command':
+			symbol = parser.symbol()
 			#if symbol doesn't begin with a numeric value, check symbol table for
 			#correct value. Add new symbol if necessary
 			try:
