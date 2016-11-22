@@ -44,8 +44,7 @@ for command in asm_file:
 			dest = parser.dest(current_command)
 			comp = parser.comp(current_command)
 			jump = parser.jump(current_command)
-			coder = code.Code(dest, comp, jump)
-			binary_repr = coder.binary_repr_of_command()
+			binary_repr = code.binary_code(dest, comp, jump)
 			command_list.append(binary_repr)
 		elif parser.command_type(current_command) == 'A_Command':
 			symbol = parser.symbol(current_command)
